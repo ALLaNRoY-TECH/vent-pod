@@ -31,22 +31,7 @@ export default function LandingPage() {
   const orbRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Choose 3 Selection
-  const [selectedFeatures, setSelectedFeatures] = useState([]);
-  const featureOptions = [
-    { id: 'chat', label: 'Anonymous Chat', icon: '💬' },
-    { id: 'feed', label: 'Confession Feed', icon: '📝' },
-    { id: 'music', label: 'Music Sharing', icon: '🎵' },
-    { id: 'mod', label: 'AI Moderation', icon: '🛡️' }
-  ];
 
-  const toggleFeature = (id) => {
-    if (selectedFeatures.includes(id)) {
-      setSelectedFeatures(prev => prev.filter(f => f !== id));
-    } else if (selectedFeatures.length < 3) {
-      setSelectedFeatures(prev => [...prev, id]);
-    }
-  };
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -150,7 +135,6 @@ export default function LandingPage() {
   }, { scope: mainRef });
 
   const scrubText = "A radically safe space to vent. Anonymous. Monitored. Real.".split(" ");
-  const isSelectionComplete = selectedFeatures.length === 3;
 
   return (
     <div ref={mainRef} className="overflow-x-hidden w-full bg-[#040814] text-slate-100 selection:bg-cyan-500/30 font-sans">
@@ -274,7 +258,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SECTION 4: EMOTIONAL ORB / CHOOSE 3 OVERLAY / CTA */}
+      {/* SECTION 4: EMOTIONAL ORB / DIRECT NAVIGATION */}
       <section ref={orbSectionRef} className="min-h-screen w-full flex flex-col items-center justify-center relative bg-gradient-to-b from-[#0a1128] to-[#040814] border-t border-teal-900/20 py-20">
         
         {/* The Orb Background (Pulsing and subtle mouse follow) */}
@@ -287,73 +271,64 @@ export default function LandingPage() {
           }}
         />
 
-        <div className="relative z-10 w-full max-w-3xl px-4 flex flex-col items-center">
+        <div className="relative z-10 w-full max-w-5xl px-4 flex flex-col items-center">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-cyan-50 drop-shadow-2xl">
-            Design Your Space
+            Where to?
           </h2>
-          <p className="text-teal-200/80 mb-10 text-lg md:text-xl text-center">
-            Select up to 3 core features to activate your gateway.
+          <p className="text-teal-200/80 mb-12 text-lg md:text-xl text-center">
+            Choose your path. Enter the space you need right now.
           </p>
 
-          <div className="w-full flex justify-between items-center mb-6 px-4 py-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md">
-            <span className="text-sm font-medium tracking-wide uppercase text-cyan-300">Feature Lock</span>
-            <span className={`text-sm font-bold tracking-widest transition-colors duration-300 ${isSelectionComplete ? 'text-teal-400 drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]' : 'text-slate-400'}`}>
-              {selectedFeatures.length} / 3 Selected
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-12">
-            {featureOptions.map(f => {
-              const isSelected = selectedFeatures.includes(f.id);
-              return (
-                <button
-                  key={f.id}
-                  onClick={() => toggleFeature(f.id)}
-                  className={`relative p-6 rounded-2xl text-left border overflow-hidden backdrop-blur-xl transition-all duration-300 transform-gpu hover:-translate-y-1 flex items-center gap-4 ${
-                    isSelected 
-                    ? 'border-cyan-400 bg-cyan-900/30 shadow-[0_0_25px_rgba(6,182,212,0.4)]' 
-                    : 'border-slate-700/50 bg-[#0a1930]/50 hover:bg-[#0a1930]/80 hover:border-teal-500/40'
-                  }`}
-                >
-                  {/* Subtle inner glow on select */}
-                  {isSelected && <div className="absolute inset-0 bg-cyan-400/10 blur-xl pointer-events-none" />}
-                  
-                  <div className={`text-3xl transition-transform duration-300 ${isSelected ? 'scale-110 drop-shadow-[0_0_10px_rgba(6,182,212,0.6)]' : ''}`}>
-                    {f.icon}
-                  </div>
-                  <span className={`text-lg font-semibold transition-colors duration-300 ${isSelected ? 'text-white drop-shadow-md' : 'text-slate-300'}`}>
-                    {f.label}
-                  </span>
-                  
-                  {/* Selection dot */}
-                  <div className={`ml-auto w-4 h-4 rounded-full border-2 transition-all duration-300 ${isSelected ? 'border-cyan-400 bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)]' : 'border-slate-600 bg-transparent'}`} />
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="flex flex-col items-center">
-            <button 
-              onClick={() => isSelectionComplete && navigate('/mood')}
-              disabled={!isSelectionComplete}
-              className={`px-12 py-5 rounded-2xl font-bold text-xl transition-all duration-500 flex items-center justify-center gap-3 relative overflow-hidden group ${
-                isSelectionComplete 
-                ? 'bg-gradient-to-r from-cyan-500 to-teal-400 text-dark-900 transform hover:-translate-y-1 shadow-[0_0_40px_rgba(6,182,212,0.6)] hover:shadow-[0_0_60px_rgba(6,182,212,0.9)] cursor-pointer' 
-                : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-              }`}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
+            
+            <button
+              onClick={() => navigate('/mood')}
+              className="group relative p-10 rounded-3xl text-center border border-cyan-800/50 bg-[#0a1930]/60 overflow-hidden backdrop-blur-xl transition-all duration-300 transform-gpu hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] hover:bg-[#0b1c36]/80 flex flex-col items-center"
             >
-              {isSelectionComplete && <div className="absolute inset-0 w-full h-full bg-white/30 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-overlay"></div>}
-              <span className="relative z-10">{isSelectionComplete ? 'Start Your Session' : 'Locked'}</span>
-              
-              {isSelectionComplete && (
-                <svg className="w-6 h-6 animate-pulse relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              )}
+              <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400/10 blur-xl transition-colors duration-300 pointer-events-none" />
+              <div className="text-6xl mb-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-transform duration-300">
+                💬
+              </div>
+              <span className="text-2xl font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-300 mb-4">
+                Anonymous Chat
+              </span>
+              <p className="text-slate-400 group-hover:text-cyan-100/70 text-base leading-relaxed transition-colors duration-300">
+                Connect instantly. Share your feelings in a safe, monitored real-time space.
+              </p>
             </button>
-            {!isSelectionComplete && (
-              <p className="mt-4 text-slate-500/80 text-sm font-light">Select options to unlock your gateway.</p>
-            )}
+
+            <button
+              onClick={() => navigate('/feed')}
+              className="group relative p-10 rounded-3xl text-center border border-teal-800/50 bg-[#0a1930]/60 overflow-hidden backdrop-blur-xl transition-all duration-300 transform-gpu hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(20,184,166,0.4)] hover:bg-[#0b1c36]/80 flex flex-col items-center"
+            >
+              <div className="absolute inset-0 bg-teal-400/0 group-hover:bg-teal-400/10 blur-xl transition-colors duration-300 pointer-events-none" />
+              <div className="text-6xl mb-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(20,184,166,0.8)] transition-transform duration-300">
+                📝
+              </div>
+              <span className="text-2xl font-bold text-slate-100 group-hover:text-teal-300 transition-colors duration-300 mb-4">
+                Confession Feed
+              </span>
+              <p className="text-slate-400 group-hover:text-teal-100/70 text-base leading-relaxed transition-colors duration-300">
+                Read, react, and unleash your rawest thoughts onto the public wall.
+              </p>
+            </button>
+
+            <button
+              onClick={() => navigate('/help')}
+              className="group relative p-10 rounded-3xl text-center border border-blue-800/50 bg-[#0a1930]/60 overflow-hidden backdrop-blur-xl transition-all duration-300 transform-gpu hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:bg-[#0b1c36]/80 flex flex-col items-center"
+            >
+              <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 blur-xl transition-colors duration-300 pointer-events-none" />
+              <div className="text-6xl mb-6 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] transition-transform duration-300">
+                🧑‍⚕️
+              </div>
+              <span className="text-2xl font-bold text-slate-100 group-hover:text-blue-300 transition-colors duration-300 mb-4">
+                Professional Help
+              </span>
+              <p className="text-slate-400 group-hover:text-blue-100/70 text-base leading-relaxed transition-colors duration-300">
+                When venting isn't enough. Seek guidance from verified emotional experts.
+              </p>
+            </button>
+
           </div>
 
         </div>
