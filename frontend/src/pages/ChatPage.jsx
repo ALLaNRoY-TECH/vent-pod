@@ -19,6 +19,8 @@ export default function ChatPage() {
   const [finalWarning, setFinalWarning] = useState(null);
   const [showCriticalAlert, setShowCriticalAlert] = useState(false);
   const [isBanned, setIsBanned] = useState(false);
+  const [banUntil, setBanUntil] = useState(null);
+  const [remainingTime, setRemainingTime] = useState("");
   const [shakeInput, setShakeInput] = useState(false);
   const [partnerBanned, setPartnerBanned] = useState(false);
   const [deescalateSuggestion, setDeescalateSuggestion] = useState(null);
@@ -32,6 +34,40 @@ export default function ChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
   useEffect(() => { scrollToBottom() }, [messages, partnerTyping]);
+
+  // Handle persistent ban state
+  useEffect(() => {
+    const localBan = localStorage.getItem("vent_ban_until");
+    if (localBan && Date.now() < parseInt(localBan)) {
+      setIsBanned(true);
+      setBanUntil(parseInt(localBan));
+    } else {
+      localStorage.removeItem("vent_ban_until");
+    }
+  }, []);
+
+  // Cooldown countdown hook
+  useEffect(() => {
+    if (!banUntil) return;
+    
+    const interval = setInterval(() => {
+      const now = Date.now();
+      if (now >= banUntil) {
+        setIsBanned(false);
+        setBanUntil(null);
+        setWarningCount(0); // Reset warnings when cooldown ends
+        localStorage.removeItem("vent_ban_until");
+        clearInterval(interval);
+      } else {
+        const diffInSeconds = Math.floor((banUntil - now) / 1000);
+        const m = Math.floor(diffInSeconds / 60).toString().padStart(2, '0');
+        const s = (diffInSeconds % 60).toString().padStart(2, '0');
+        setRemainingTime(`${m}:${s}`);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [banUntil]);
 
   useEffect(() => {
     if (!roomId || !socket.connected) {
@@ -62,6 +98,10 @@ export default function ChatPage() {
 
     socket.on('banned', (data) => {
       setIsBanned(true);
+      if (data && data.banUntil) {
+        setBanUntil(data.banUntil);
+        localStorage.setItem("vent_ban_until", data.banUntil);
+      }
     });
 
     socket.on('warning', (data) => {
@@ -468,7 +508,13 @@ export default function ChatPage() {
                  <Lock size={40} className="text-red-500" />
               </div>
               <h1 className="text-3xl font-extrabold text-white mb-4">Account Restricted</h1>
-              <p className="text-slate-300 mb-8 text-lg">You have been banned from chat due to repeated safety violations.</p>
+              <p className="text-slate-300 mb-6 text-lg">Take a short break. You can chat again in:</p>
+              
+              <div className="text-5xl font-mono text-red-400 font-bold tracking-widest mb-8 animate-pulse drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]">
+                {remainingTime || "00:00"}
+              </div>
+
+              <p className="text-slate-400 italic mb-8">"Let’s keep this space safe for everyone."</p>
               
               <button 
                 onClick={() => navigate('/')}

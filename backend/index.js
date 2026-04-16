@@ -29,6 +29,7 @@ const io = new Server(server, {
 // We use a queue-based matchmaking system with scope for mood-based filtering.
 let waitingQueue = [];
 const userWarnings = {}; // Memory mapped strike tracker
+const userBans = {}; // Timed cooldown ban storage
 const chatTimers = {}; // Track room 10-minute timers
 
 // Connect to MongoDB
@@ -89,6 +90,18 @@ io.on('connection', (socket) => {
         return;
       }
 
+      // Check current active ban state
+      if (userBans[socket.id]) {
+        if (Date.now() < userBans[socket.id]) {
+          socket.emit("banned", { banUntil: userBans[socket.id] });
+          return; // Block message
+        } else {
+          // Ban expired naturally
+          delete userBans[socket.id];
+          userWarnings[socket.id] = 0; // reset local strikes after serving sentence
+        }
+      }
+
       const result = await moderateMessage(text);
       console.log("Moderation result:", result);
 
@@ -136,12 +149,10 @@ io.on('connection', (socket) => {
 
       // BAN ENFORCEMENT logic strictly applies after evaluations
       const currentStrikes = userWarnings[socket.id] || 0;
-      if (currentStrikes >= 3) {
-        socket.emit("banned", { message: "You have been banned due to repeated violations" });
+      if (currentStrikes >= 3 && !userBans[socket.id]) {
+        userBans[socket.id] = Date.now() + (30 * 60 * 1000); // 30 mins
+        socket.emit("banned", { banUntil: userBans[socket.id] });
         io.to(roomId).emit("partner_banned");
-        setTimeout(() => {
-          socket.disconnect(true);
-        }, 500);
       }
 
     } catch (err) {
