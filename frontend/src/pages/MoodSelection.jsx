@@ -2,10 +2,10 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
 const moods = [
-  { id: 'sad', label: 'Sad', emoji: '😔', color: 'from-blue-500/20 to-blue-600/20', borderColor: 'hover:border-blue-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]' },
-  { id: 'angry', label: 'Angry', emoji: '😡', color: 'from-orange-500/20 to-red-600/20', borderColor: 'hover:border-red-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' },
-  { id: 'stressed', label: 'Stressed', emoji: '😩', color: 'from-yellow-400/20 to-orange-500/20', borderColor: 'hover:border-yellow-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]' },
-  { id: 'lonely', label: 'Lonely', emoji: '😶', color: 'from-indigo-500/20 to-purple-600/20', borderColor: 'hover:border-purple-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]' },
+  { id: 'low energy', label: 'Low Energy', emoji: '🪫', color: 'from-slate-700/40 to-slate-800/40', borderColor: 'hover:border-slate-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(100,116,139,0.3)]' },
+  { id: 'overthinking', label: 'Overthinking', emoji: '🌀', color: 'from-indigo-600/30 to-purple-800/30', borderColor: 'hover:border-purple-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]' },
+  { id: 'just need someone', label: 'Just need someone', emoji: '🫂', color: 'from-blue-500/30 to-cyan-700/30', borderColor: 'hover:border-cyan-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]' },
+  { id: 'chaotic', label: 'Chaotic', emoji: '⚡', color: 'from-orange-500/30 to-red-600/30', borderColor: 'hover:border-red-500/50', shadow: 'hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' },
 ];
 
 export default function MoodSelection() {

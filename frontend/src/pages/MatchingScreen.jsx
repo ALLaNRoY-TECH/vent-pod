@@ -7,8 +7,11 @@ import { AlertTriangle } from 'lucide-react'
 export default function MatchingScreen() {
   const navigate = useNavigate();
   const [connectionError, setConnectionError] = useState(false);
+  const [acceptedTC, setAcceptedTC] = useState(false);
 
   useEffect(() => {
+    if (!acceptedTC) return;
+
     // Determine user's selected mood
     const mood = sessionStorage.getItem('vent_mood') || 'unknown';
 
@@ -38,7 +41,41 @@ export default function MatchingScreen() {
       socket.off('connect_error');
       // DO NOT disconnect socket here unless they leave the site, pass it to chat page
     };
-  }, [navigate]);
+  }, [navigate, acceptedTC]);
+
+  if (!acceptedTC) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full glass-card p-8 rounded-2xl border border-accent-500/50 shadow-[0_0_30px_rgba(139,92,246,0.3)] relative overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-600 to-indigo-600" />
+          <h2 className="text-2xl font-bold text-white mb-4">Safety First 🛡️</h2>
+          <div className="space-y-4 text-slate-300 text-sm text-left mb-8">
+            <p className="flex gap-3"><span className="text-accent-400">1.</span> This is an anonymous platform. Do not share personal information.</p>
+            <p className="flex gap-3"><span className="text-accent-400">2.</span> We are not responsible for any personal information shared.</p>
+            <p className="flex gap-3"><span className="text-accent-400">3.</span> You can exit anytime if you feel uncomfortable or unsafe.</p>
+          </div>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => navigate('/')}
+              className="flex-1 py-3 px-4 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-800 transition"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={() => setAcceptedTC(true)}
+              className="flex-1 py-3 px-4 rounded-xl bg-accent-600 hover:bg-accent-500 text-white font-bold transition shadow-[0_0_15px_rgba(139,92,246,0.4)]"
+            >
+              I Understand
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4 text-center">

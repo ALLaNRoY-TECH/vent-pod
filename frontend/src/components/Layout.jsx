@@ -17,6 +17,7 @@ export default function Layout() {
             <span className="text-xl font-bold tracking-tight">Vent<span className="text-accent-500">Pod</span></span>
           </Link>
           <div className="flex gap-6 items-center text-sm font-medium">
+            <Link to="/feed" className="text-slate-400 hover:text-white transition-colors">Anonymous Feed</Link>
             <Link to="/help" className="text-slate-400 hover:text-white transition-colors">Professional Help</Link>
           </div>
         </div>

@@ -7,6 +7,7 @@ import MoodSelection from './pages/MoodSelection'
 import MatchingScreen from './pages/MatchingScreen'
 import ChatPage from './pages/ChatPage'
 import ProfessionalHelp from './pages/ProfessionalHelp'
+import ConfessionFeed from './pages/ConfessionFeed'
 import IntroScreen from './components/IntroScreen'
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="mood" element={<MoodSelection />} />
               <Route path="match" element={<MatchingScreen />} />
               <Route path="chat" element={<ChatPage />} />
+              <Route path="feed" element={<ConfessionFeed />} />
               <Route path="help" element={<ProfessionalHelp />} />
             </Route>
           </Routes>

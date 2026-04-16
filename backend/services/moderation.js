@@ -1,20 +1,29 @@
 const { OpenAI } = require('openai');
 
-const DEMO_CRITICAL_KEYWORDS = [
-  "i want to die",
-  "i can't live anymore",
-  "ending my life",
-  "no reason to live"
+const TOXIC_KEYWORDS = ["fuck", "shit", "bitch", "idiot", "stupid", "loser", "suck"];
+const HARASSMENT_KEYWORDS = ["i hate you", "kill yourself", "you are useless"];
+const CRITICAL_KEYWORDS = [
+  "i want to die", "end my life", "suicide",
+  "i can't live anymore", "ending my life", "no reason to live"
 ];
 
-const moderationService = async (text) => {
+const moderateMessage = async (text) => {
+  if (!text) return 'SAFE'; // Guard clause
+
   const normalizedText = text.toLowerCase();
   
   // 1. Keyword Pre-filter (Guaranteed Demo Trigger)
-  const isCriticalKeyword = DEMO_CRITICAL_KEYWORDS.some(kw => normalizedText.includes(kw));
+  const isCriticalKeyword = CRITICAL_KEYWORDS.some(kw => normalizedText.includes(kw));
   if (isCriticalKeyword) {
-    console.log("Moderation: Caught by keyword pre-filter -> CRITICAL");
+    console.log(`Moderation [${text}]: Caught by CRITICAL pre-filter`);
     return 'CRITICAL';
+  }
+  
+  const isToxic = TOXIC_KEYWORDS.some(kw => normalizedText.includes(kw));
+  const isHarassment = HARASSMENT_KEYWORDS.some(kw => normalizedText.includes(kw));
+  if (isToxic || isHarassment) {
+    console.log(`Moderation [${text}]: Caught by TOXIC/HARASSMENT pre-filter`);
+    return 'FLAGGED';
   }
   if (!process.env.OPENAI_API_KEY) {
     console.warn("No OPENAI_API_KEY provided. Skipping moderation.");
@@ -46,4 +55,4 @@ const moderationService = async (text) => {
   }
 };
 
-module.exports = { moderationService };
+module.exports = { moderateMessage };
