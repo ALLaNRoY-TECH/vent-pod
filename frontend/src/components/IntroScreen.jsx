@@ -23,8 +23,8 @@ export default function IntroScreen() {
       >
         <motion.h1 
           className="text-5xl md:text-7xl font-bold tracking-tighter text-white"
-          initial={{ textShadow: "0px 0px 0px rgba(139, 92, 246, 0)" }}
-          animate={{ textShadow: "0px 0px 40px rgba(139, 92, 246, 0.8)" }}
+          initial={{ textShadow: "0px 0px 0px rgba(234, 179, 8, 0)" }}
+          animate={{ textShadow: "0px 0px 40px rgba(234, 179, 8, 0.8)" }}
           transition={{ duration: 1.5, delay: 0.5 }}
         >
           VENT<span className="text-accent-500">POD</span>
