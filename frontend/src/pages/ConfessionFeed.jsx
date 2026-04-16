@@ -22,9 +22,9 @@ export default function ConfessionFeed() {
   const [commentText, setCommentText] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Use relative URL to fetch from Express server running on the same host proxy or assume port 3000
-  // Since Vite proxy isn't configured in the context, we'll try to hit localhost:3000/api/confessions
-  const API_URL = 'http://localhost:3000/api/confessions';
+  // Fetch from env or fallback to localhost
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+  const API_URL = `${BASE_URL}/api/confessions`;
 
   useEffect(() => {
     fetchPosts();
